@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フルーツジャーニー（Fruits Journey） | 埼玉全土・池袋界隈のデリバリーヘルス</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --primary-dark: #c9184a;
+            --accent-gold: #ffb703;
+            --bg-dark: #121214;
+            --card-bg: #1c1c21;
+            --card-border: #2e2e38;
+            --text-main: #f8f9fa;
+            --text-sub: #adb5bd;
+            --danger: #e63946;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 90px; /* フッター固定CTAの余白 */
+            overflow-x: hidden;
+        }
+
+        /* 18歳未満確認モーダル */
+        #ageModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #1e1e24;
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 0 35px rgba(255, 77, 109, 0.35);
+        }
+
+        .modal-box .r18-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: #fff;
+            font-weight: 900;
+            font-size: 20px;
+            width: 56px;
+            height: 56px;
+            line-height: 56px;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.5);
+        }
+
+        .modal-box h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: #fff;
+        }
+
+        .modal-box p {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .modal-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-enter {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-enter:active {
+            transform: scale(0.98);
+        }
+
+        .btn-exit {
+            background: transparent;
+            color: #888;
+            border: 1px solid #444;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* ヘッダー・ファーストビュー */
+        header {
+            position: relative;
+            background: radial-gradient(circle at 50% 20%, #4a0e1c 0%, #121214 75%);
+            padding: 40px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .top-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 77, 109, 0.15);
+            border: 1px solid rgba(255, 77, 109, 0.4);
+            color: #ff758f;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-en {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .logo-jp {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            background: linear-gradient(135deg, #fff 40%, #ffccd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .badge-pill {
+            background: rgba(255, 183, 3, 0.15);
+            border: 1px solid rgba(255, 183, 3, 0.4);
+            color: var(--accent-gold);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        /* コンテナ */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 32px 0 18px;
+            position: relative;
+        }
+
+        .section-title h3 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title h3 i {
+            color: var(--primary);
+        }
+
+        /* カード汎用 */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* 営業案内・エリア */
+        .info-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .info-icon {
+            font-size: 20px;
+            color: var(--primary);
+            margin-top: 2px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 2px;
+        }
+
+        .info-val {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .info-subtext {
+            font-size: 12px;
+            color: var(--accent-gold);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* 料金システム表 */
+        .price-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 14px 18px;
+            position: relative;
+        }
+
+        .price-item.popular {
+            border: 1.5px solid var(--primary);
+            background: rgba(255, 77, 109, 0.08);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -9px;
+            left: 16px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .price-time {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .price-num {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .price-num span {
+            font-size: 14px;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-left: 2px;
+        }
+
+        .free-perks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .perk-box {
+            background: rgba(255, 183, 3, 0.1);
+            border: 1px dashed var(--accent-gold);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .perk-box .title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .perk-box .badge {
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 900;
+            margin-top: 2px;
+        }
+
+        /* プレイ内容・オプション */
+        .highlight-banner {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(201, 24, 74, 0.3));
+            border: 1.5px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .highlight-banner h4 {
+            font-size: 16px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .highlight-banner p {
+            font-size: 13px;
+            color: #ffccd5;
+        }
+
+        .special-option-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .option-tag {
+            font-size: 11px;
+            background: #333;
+            color: #ddd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .opt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 700;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 6px;
+        }
+
+        .opt-price {
+            color: var(--accent-gold);
+            font-size: 13px;
+        }
+
+        /* 厳守NG・禁止事項 */
+        .ng-card {
+            border: 1.5px solid var(--danger);
+            background: rgba(230, 57, 70, 0.05);
+        }
+
+        .ng-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-weight: 900;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .ng-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .ng-box {
+            background: rgba(230, 57, 70, 0.15);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px 4px;
+            border-radius: 8px;
+        }
+
+        .penalty-alert {
+            background: #2a080c;
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            color: #ff99a8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .penalty-num {
+            font-size: 20px;
+            color: #ff4d6d;
+            font-weight: 900;
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            padding: 24px 16px 30px;
+            color: var(--text-sub);
+            font-size: 11px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .compliance-note {
+            margin-bottom: 14px;
+            line-height: 1.8;
+            color: #777;
+        }
+
+        /* 画面下部固定アクションバー */
+        .fixed-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--card-border);
+            padding: 10px 14px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        .cta-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        .cta-btn:active {
+            opacity: 0.85;
+        }
+
+        .cta-tel {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+        }
+
+        .cta-tel .sub {
+            font-size: 10px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .cta-tel .main {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cta-web {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+        }
+
+        .cta-web .sub {
+            font-size: 10px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .cta-web .main {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 18歳未満入場禁止ポップアップ -->
+    <div id="ageModal">
+        <div class="modal-box">
+            <div class="r18-badge">18禁</div>
+            <h2>年齢確認 / 警告</h2>
+            <p>
+                当サイトは無店舗型性風俗特殊営業（デリバリーヘルス）の公式サイトです。<br>
+                <strong>18歳未満（高校生含む）の方の閲覧およびご利用は風俗営業法に基づき固くお断りいたします。</strong>
+            </p>
+            <div class="modal-btns">
+                <button class="btn-enter" onclick="confirmAge(true)">私は18歳以上です（入場する）</button>
+                <a href="https://www.google.co.jp" class="btn-exit" onclick="confirmAge(false)">18歳未満です（退出する）</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="top-tag"><i class="fa-solid fa-gem"></i> 埼玉全土・池袋界隈 高級デリバリーヘルス</div>
+        <span class="logo-en">Fruits Journey</span>
+        <h1 class="logo-jp">フルーツジャーニー</h1>
+        <div class="header-badges">
+            <span class="badge-pill"><i class="fa-solid fa-shield-halved"></i> 届出済み正規営業店</span>
+            <span class="badge-pill"><i class="fa-solid fa-clock"></i> Web予約24時間</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 営業案内・出張エリア -->
+        <div class="card">
+            <div class="info-grid">
+                <div class="info-row">
+                    <div class="info-icon"><i class="fa-regular fa-clock"></i></div>
+                    <div>
+                        <div class="info-label">営業時間</div>
+                        <div class="info-val">12:00 〜 24:00</div>
+                        <div class="info-subtext"><i class="fa-solid fa-bolt"></i> Web予約は24時間受付中！</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div>
+                        <div class="info-label">出張エリア・交通費</div>
+                        <div class="info-val">埼玉全土 ＆ 池袋界隈</div>
+                        <div class="info-subtext">出張費：一律 3,000円</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 料金システム -->
+        <div class="section-title">
+            <h3><i class="fa-solid fa-coins"></i> 料金システム</h3>
+        </div>
+        <div class="card">
+            <div class="price-list">
+                <div class="price-item">
+                    <div class="price-time">90分 コース</div>
+                    <div class="price-num">49,000<span>円</span></div>
+                </div>
+                <div class="price-item popular">
+                    <div class="popular-badge">一番人気</div>
+                    <div class="price-time">120分 コース</div>
+                    <div class="price-num">61,000<span>円</span></div>
+                </div>
+                <div class="price-item">
+                    <div class="price-time">150分 コース</div>
+                    <div class="price-num">73,000<span>円</span></div>
+                </div>
+                <div class="price-item">
+                    <div class="price-time">180分 コース</div>
+                    <div class="price-num">85,000<span>円</span></div>
+                </div>
+            </div>
+
+            <!-- 特典・無料指名 -->
+            <div class="free-perks">
+                <div class="perk-box">
+                    <div class="title">写真指名代</div>
+                    <div class="badge">完全無料</div>
+                </div>
+                <div class="perk-box">
+                    <div class="title">本指名代</div>
+                    <div class="badge">完全無料</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- プレイ内容 -->
+        <div class="section-title">
+            <h3><i class="fa-solid fa-heart"></i> プレイ内容・オプション</h3>
+        </div>
+        <div class="card">
+            <div class="highlight-banner">
+                <h4>他店では有料オプションがほぼ全て無料！</h4>
+                <p>基本料金のみで極上の密着リラクゼーションをお楽しみいただけます。</p>
+            </div>
+
+            <div class="special-option-box">
+                <span class="option-tag">【プレイ可能なキャスト限定】有料オプション</span>
+                <div class="option-list">
+                    <div class="opt-item">
+                        <span>AF</span>
+                        <span class="opt-price">時価</span>
+                    </div>
+                    <div class="opt-item">
+                        <span>過度のSM</span>
+                        <span class="opt-price">時価</span>
+                    </div>
+                    <div class="opt-item">
+                        <span>スカトロ</span>
+                        <span class="opt-price">時価</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 厳守NG行為 -->
+        <div class="section-title">
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> ご利用前の確認事項</h3>
+        </div>
+        <div class="card ng-card">
+            <div class="ng-header">
+                <i class="fa-solid fa-ban"></i> 厳守NG行為
+            </div>
+            <div class="ng-grid">
+                <div class="ng-box">本番行為</div>
+                <div class="ng-box">流血・暴力</div>
+                <div class="ng-box">犯罪・盗撮</div>
+            </div>
+            <div class="penalty-alert">
+                上記違反が確認された場合、即時サービスを中止し警察へ通報いたします。
+                <span class="penalty-num">違約罰金：200万円</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <p class="compliance-note">
+            当店は風俗営業等の規制及び業務の適正化等に関する法律に基づき、<br>
+            公安委員会（所轄警察署）へ無店舗型性風俗特殊営業の届出を行っております。<br>
+            18歳未満の方の利用・性病罹患者・反社会的勢力のご利用は固くお断りいたします。
+        </p>
+        <p>&copy; フルーツジャーニー（Fruits Journey） All Rights Reserved.</p>
+    </footer>
+
+    <!-- 画面下部固定アクションバー（スマホ用） -->
+    <div class="fixed-cta">
+        <a href="tel:0000000000" class="cta-btn cta-tel">
+            <span class="sub">お電話でのご予約・お問合せ</span>
+            <span class="main"><i class="fa-solid fa-phone"></i> 電話をかける</span>
+        </a>
+        <a href="#web-reserve" class="cta-btn cta-web">
+            <span class="sub">24時間いつでも受付中</span>
+            <span class="main"><i class="fa-solid fa-envelope"></i> WEB即時予約</span>
+        </a>
+    </div>
+
+    <!-- 年齢確認スクリプト -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const isVerified = localStorage.getItem('fj_age_verified');
+            if (isVerified === 'true') {
+                const modal = document.getElementById('ageModal');
+                if (modal) modal.style.display = 'none';
+            }
+        });
+
+        function confirmAge(allow) {
+            if (allow) {
+                localStorage.setItem('fj_age_verified', 'true');
+                document.getElementById('ageModal').style.display = 'none';
+            } else {
+                window.location.href = 'https://www.google.co.jp';
+            }
+        }
+    </script>
+</body>
+</html>
